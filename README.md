@@ -9,16 +9,20 @@ fun main() = runBlocking {
     val results = parallelAsync(
         scope = this,
         tasks = arrayOf(
-            async { 1 },
-            async { 2 },
-            async { 3 }
+            { delay(300); "Task1" },
+            { delay(500); "Task2" },
+            { delay(700); "Task3" },
         ),
         timeoutMillis = 2000,
-        onProgress = { completed, total -> println("Progress: $completed / $total") },
-        onError = { exception, index -> println("Error at index $index: $exception") }
+        onProgress = { completed, total ->
+            println("Completed $completed of $total tasks")
+        },
+        onError = { e, index ->
+            println("Error at index $index: $e")
+        }
     )
-
-    results.forEachIndexed { index, result -> println("Result at index $index: $result") }
-
+    results.forEachIndexed { index, result ->
+        println("Result at index $index: $result")
+    }
 }
 ```
